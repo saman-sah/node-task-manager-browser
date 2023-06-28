@@ -1,0 +1,12 @@
+form {
+    margin: 3em 0;
+}
+* {
+    color: #000 !important
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-around;
+    width: 60%;
+ }
