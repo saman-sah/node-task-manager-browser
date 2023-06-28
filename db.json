@@ -11,17 +11,17 @@
     },
     {
         "id": 4,
-        "title": "sdsdsd",
+        "title": "AWS",
         "completed": true
     },
     {
         "id": 5,
-        "title": "asasasa",
+        "title": "CI/CD",
         "completed": false
     },
     {
         "id": 6,
-        "title": "sasasddfdf",
+        "title": "DevOps",
         "completed": true
     }
 ]
