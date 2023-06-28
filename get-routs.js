@@ -34,34 +34,26 @@ router.get("/", (req, res)=> {
   </form>
   <ul class="list-group">
   ${ tasks.map((task)=> {
-   return `<li class="list-group-item d-flex justify-content-between align-items-center data-id=${ task.id }">
-   <div>
-      ${ task.title }
-      </div>
+    return `<li class="list-group-item d-flex justify-content-between align-items-center data-id=${ task.id }">
+            <div> ${ task.title } </div>
 
-      <div class="action-buttons">
-      <span class="badge 
-      ${ task.completed ? 'badge-primary' : 'bg-secondary'}
-      badge-pill">
-        ${ task.completed ? 'Compeleted' : 'Inprogress' }
-      </span>
-      <span class="badge 
-      ${ task.completed ? 'badge-primary' : 'bg-secondary'}
-      badge-pill">
-        ${ task.completed ? 'Compeleted' : 'Inprogress' }
-      </span>
-      <span class="badge 
-      ${ task.completed ? 'badge-primary' : 'bg-secondary'}
-      badge-pill">
-        ${ task.completed ? 'Compeleted' : 'Inprogress' }
-      </span>
-      <span class="badge 
-      ${ task.completed ? 'badge-primary' : 'bg-secondary'}
-      badge-pill">
-        ${ task.completed ? 'Compeleted' : 'Inprogress' }
-      </span>
-</div>
-    </li>`
+            <div class="action-buttons">
+                <span class="badge 
+                ${ task.completed ? 'badge-primary' : 'bg-secondary'}
+                badge-pill">
+                    ${ task.completed ? 'Compeleted' : 'Inprogress' }
+                </span>
+                <span class="badge badge-pill toggle-btn">
+                    Toggle
+                </span>
+                <span class="badge badge-pill edit-btn">
+                    Edit
+                </span>
+                <span class="badge badge-pill delete-btn">
+                    Delete
+                </span>
+            </div>
+        </li>`
   })
 .join("") }
     
@@ -69,6 +61,8 @@ router.get("/", (req, res)=> {
   </div>
 </div>
 </div>
+<script src="js/axios.js"></script>
+<script src="js/scripts.js"></script>
 </body>
 </html>
     `)
