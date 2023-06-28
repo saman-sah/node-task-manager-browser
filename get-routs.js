@@ -34,8 +34,8 @@ router.get("/", (req, res)=> {
   </form>
   <ul class="list-group">
   ${ tasks.map((task)=> {
-    return `<li class="list-group-item d-flex justify-content-between align-items-center data-id=${ task.id }">
-            <div> ${ task.title } </div>
+    return `<li class="list-group-item d-flex justify-content-between align-items-center" data-id="${ task.id }">
+            <span> ${ task.title } </span>
 
             <div class="action-buttons">
                 <span class="badge 
