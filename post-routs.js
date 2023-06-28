@@ -20,4 +20,19 @@ router.post('/add-task', (req, res)=> {
     }
 })
 
+router.post("/toggle-task", (req, res)=> {
+    if(req.body.id) {
+        const task= Task.getTaskById(req.body.id)
+        if(task){
+            task.completed = !task.completed
+            task.save();
+            res.json(true)
+        }else{
+            res.status(400).send("<h2>Task not Found</h2>")
+        }
+    }else{
+        res.status(400).send("<h2>Invalid Request</h2>")
+    }    
+})
+
 export default router
