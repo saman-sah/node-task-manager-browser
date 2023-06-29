@@ -7,26 +7,26 @@
     {
         "id": 3,
         "title": "Speaking English",
-        "completed": true
+        "completed": false
     },
     {
         "id": 4,
         "title": "AWS",
-        "completed": true
+        "completed": false
     },
     {
         "id": 5,
         "title": "CI/CD",
-        "completed": false
+        "completed": true
     },
     {
         "id": 6,
         "title": "DevOps",
-        "completed": true
+        "completed": false
     },
     {
         "id": 7,
         "title": "mvc",
-        "completed": false
+        "completed": true
     }
 ]
