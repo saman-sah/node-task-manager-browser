@@ -35,7 +35,13 @@ list.addEventListener("click",async (event)=> {
             try {
                 const response= await axios.post("/delete-task", { id })
                 if(response.data === true) {
-                    location.reload();
+                    // location.reload();
+                    liElement.remove();
+                    if(!document.querySelectorAll("li").length) {
+                        const ul= document.querySelector("ul");
+                        ul.outerHTML=
+                        '<h2 class="text-center">There is no task</h2>'
+                    }
                 }else {
                     alert(response.data)
                 }
