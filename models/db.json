@@ -1,32 +1,7 @@
 [
     {
         "id": 1,
-        "title": "Learn NodeJs",
+        "title": "Learn Nuxt",
         "completed": false
-    },
-    {
-        "id": 3,
-        "title": "Speaking English",
-        "completed": false
-    },
-    {
-        "id": 4,
-        "title": "AWS",
-        "completed": false
-    },
-    {
-        "id": 5,
-        "title": "CI/CD",
-        "completed": true
-    },
-    {
-        "id": 6,
-        "title": "DevOps",
-        "completed": false
-    },
-    {
-        "id": 7,
-        "title": "mvc",
-        "completed": true
     }
 ]
