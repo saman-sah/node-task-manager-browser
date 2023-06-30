@@ -11,7 +11,7 @@ export default class PostController {
             try {
                 const task= new Task(title, completed)
                 task.save();
-                res.redirect("/")
+                res.json(task.id)
             } catch (err) {
                 res.status(400).send(`<h2>${ err.message }`)
             }
