@@ -6,6 +6,7 @@ import "dotenv/config";
 
 import getRouts from './routs/get-routs.js'
 import postRouts from './routs/post-routs.js'
+import taskRouts from './routs/task.js'
 
 const app= express();
 const __dirname= path.dirname(fileURLToPath(import.meta.url));
@@ -17,6 +18,7 @@ app.use(express.static(path.join(__dirname, "public")))
 
 app.use(getRouts);
 app.use(postRouts);
+app.use(taskRouts);
 
 
 app.listen(3000);
