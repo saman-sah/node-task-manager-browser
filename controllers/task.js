@@ -89,9 +89,9 @@ export default class TaskController {
     
     // Edit Task
     static updateTask (req, res) {
+        
         if(req.body.title && req.body.completed !== undefined) {
             const { title, completed }= req.body;
-
             if(title.length < 3) {
                 return res.status(400).json({
                     success: false,
@@ -109,7 +109,7 @@ export default class TaskController {
                 })
             }
 
-            task= Task.getTaskById(req.body.id);
+            task= Task.getTaskById(req.params.id);
             if(task) {
                 try {
                     task.title= title;
@@ -147,7 +147,7 @@ export default class TaskController {
     static deleteTask (req, res) {
         try {
             if(DB.deleteTask(req.params.id)) {
-                res.status(404).json({
+                res.json({
                     success:true,
                     body:null,
                     message:"Task Deleted successfully"
