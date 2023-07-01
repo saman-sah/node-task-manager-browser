@@ -8,13 +8,16 @@ const submit= document.getElementById("submit")
 list.addEventListener("click",async (event)=> {
     let target= event.target;
     let liElement= target.parentElement.parentElement
+    let title= liElement.querySelector(".title").innerText
     const id= parseInt(liElement.dataset.id)
+    
     if(target.classList.contains('toggle-btn')) {
         let status= liElement.querySelector(".status")
+        let completed;
+        status.innerHTML === "Inprogress" ? completed= true : completed= false
         try {
-            console.log(status);
-            const response= await axios.post("/toggle-task", { id })
-            if(response.data === true) {
+            const { data }= await axios.put("/tasks/"+ id, { title, completed })
+            if(data.success) {
                 if(status.innerHTML === "Completed") {
                     status.innerHTML= "Inprogress"
                     status.classList.remove("bg-primary")
@@ -25,45 +28,45 @@ list.addEventListener("click",async (event)=> {
                     status.classList.add("bg-primary")
                 }
             }else {
-                alert(response.data)
+                alert(data.message)
             }
         } catch (err) {
-            alert(err.response.data)
+            alert(err.response.data.message)
         }
     }else if(target.classList.contains('edit-btn')) {
         const label= liElement.querySelector(".title");
         const text= label.innerText;
-        console.log('text');
-        console.log(text);
         const answer= prompt("Please enter new title: ", text)
         if(answer) {
             try {
-                const response= await axios.post("/edit-task", { id,title: answer })
-                if(response.data === true) {
+                let status= liElement.querySelector(".status")
+                let completed;
+                status.innerHTML === "Inprogress" ? completed= false : completed= true
+                const { data }= await axios.put("/tasks/"+ id, { title: answer, completed })
+                if(data.success) {
                     label.innerText= answer
                 }else {
-                    alert(response.data)
+                    alert(data.message)
                 }
             } catch (err) {
-                alert(err.response.data)
+                alert(err.response.data.message)
             }
         }
     }else if(target.classList.contains('delete-btn')) {
         if(confirm("Are you sure?")) {
             try {
-                const response= await axios.post("/delete-task", { id })
-                if(response.data === true) {
-                    // location.reload();
+                const { data }= await axios.delete("/tasks/"+ id)
+                if(data.success) {
                     liElement.remove();
-                    if(!document.querySelectorAll("li").length) {
+                    if(!list.children.length) {
                         list.classList.add("d-none")
                         messageNoTask.classList.remove("d-none")
                     }
                 }else {
-                    alert(response.data)
+                    alert(data.message)
                 }
             } catch (err) {
-                alert(err.response.data)
+                alert(err.response.data.message)
             }
         }
     }
@@ -72,14 +75,14 @@ list.addEventListener("click",async (event)=> {
 
 document.addEventListener("DOMContentLoaded", async()=> {
     try {
-        const response= await axios.get("/get-all-tasks");
+        const response= await axios.get("/tasks");
         
         const data= response.data;
-        if(data instanceof Array) {
-            if(data.length) {
+        if(data.success) {
+            if(data.body.length) {
                 list.classList.remove("d-none");
                 let str= "";
-                for(let task of data) {
+                for(let task of data.body) {
                     str+= `
                     <li class="list-group-item d-flex justify-content-between align-items-center" data-id=${ task.id}>
                         <span class="title"> 
@@ -109,10 +112,10 @@ document.addEventListener("DOMContentLoaded", async()=> {
                 messageNoTask.classList.remove("d-none")
             }
         }else {
-            alert(data)
+            alert(data.message)
         }
     } catch (err) {
-        alert.apply(err.response.data)
+        alert.apply(err.response.data.message)
     }
 })
 
@@ -132,12 +135,12 @@ async function addTask() {
     }
 
     try {
-        const { data }= await axios.post('/add-task', {title, completed});
-        if(data > 0) {
+        const { data }= await axios.post('/tasks', {title, completed});
+        if(data.success) {
             messageNoTask.classList.add("d-none");
             list.classList.remove("d-none")
             const newItem= `
-                <li class="list-group-item d-flex justify-content-between align-items-center" data-id=${data}>
+                <li class="list-group-item d-flex justify-content-between align-items-center" data-id=${data.body.id}>
                     <span class="title"> 
                         ${ title }
                     </span>
@@ -160,9 +163,9 @@ async function addTask() {
             list.innerHTML += newItem;
             input.value= "";
        }else {
-        alert(data)
+        alert(data.message)
        }
     } catch (err) {
-        alert(err.response.data)
+        alert(err.response.data.message)
     }
 }
