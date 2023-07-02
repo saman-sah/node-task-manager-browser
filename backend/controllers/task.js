@@ -1,20 +1,47 @@
 import Task from '../models/task.js'
 import DB from '../models/db.js'
+import { stat } from 'fs';
 export default class TaskController {
 
-    static getAllTasks(req, res) {
+    static getTasks(req, res) {
+        let page= 1,
+            limit= 4,
+            finished= undefined,
+            search="";
+
+            if(req.query.page > 0) {
+                page= parseInt(req.query.page);
+            }
+            if(req.query.limit > 0){
+                limit= parseInt(req.query.limit)
+            }
+            if(req.query.search) {
+                search= req.query.search
+            }
+            if(req.query.finished=== "true" || req.query.finished=== "false") {
+                finished= req.query.finished=== "true" ? true : false
+            }
         try {
-            const tasks= Task.getAllTasks(true);
+            let tasks= Task.getAllTasks(true);
+            tasks= tasks.filter((item)=> item.title.includes(search))
+            if(finished !== undefined) {
+                tasks= tasks.filter((item)=> item.completed== finished)
+            }
+            const totalTasks= tasks.length;
+            const start= (page-1) * limit
+            tasks= tasks.slice(start, start+limit)
             res.json({
                 success: true,
                 body: tasks,
-                message: "All tasks fetched"
+                message: "All tasks fetched",
+                totalTasks: totalTasks
             });
         } catch (err) {
             res.status(500).json({
                 success: false,
                 body: null,
                 message: "Internal Server Error"
+                
             })
         }
     }
