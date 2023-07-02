@@ -1,6 +1,6 @@
 const list= document.querySelector(".list-group")
 const messageNoTask= document.querySelector(".no-task")
-
+axios.defaults.baseURL="http://localhost:3000"
 const input= document.getElementById("input")
 const checkbox= document.getElementById("checkbox")
 const submit= document.getElementById("submit")

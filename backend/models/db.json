@@ -2,7 +2,7 @@
     {
         "id": 1,
         "title": "Learn Nuxt",
-        "completed": true
+        "completed": false
     },
     {
         "id": 2,
@@ -11,7 +11,7 @@
     },
     {
         "id": 3,
-        "title": "dsdsds",
+        "title": "dfdsfdfsf",
         "completed": false
     }
 ]
