@@ -1,9 +1,24 @@
 const list= document.querySelector(".list-group")
 const messageNoTask= document.querySelector(".no-task")
-axios.defaults.baseURL="http://localhost:3000"
 const input= document.getElementById("input")
 const checkbox= document.getElementById("checkbox")
 const submit= document.getElementById("submit")
+
+const pagination=document.getElementById("pagination")
+const nextButton= document.getElementById("next-btn")
+const prevButton= document.getElementById("prev-btn")
+const pageLabel= document.getElementById("page-label")
+const radioAll= document.getElementById("radio-all")
+const radioCompleted= document.getElementById("radio-completed")
+const radioInprogress= document.getElementById("radio-inprogress")
+
+
+axios.defaults.baseURL="http://localhost:3000"
+
+const limit=3;
+let currentPage=1;
+let finished= undefined;
+let totalTasks, totalPages;
 
 list.addEventListener("click",async (event)=> {
     let target= event.target;
@@ -57,11 +72,10 @@ list.addEventListener("click",async (event)=> {
             try {
                 const { data }= await axios.delete("/tasks/"+ id)
                 if(data.success) {
-                    liElement.remove();
-                    if(!list.children.length) {
-                        list.classList.add("d-none")
-                        messageNoTask.classList.remove("d-none")
+                    if(list.children.length=== 1 && currentPage >1) {
+                        currentPage--;
                     }
+                    loadTask();
                 }else {
                     alert(data.message)
                 }
@@ -73,14 +87,49 @@ list.addEventListener("click",async (event)=> {
     
 })
 
-document.addEventListener("DOMContentLoaded", async()=> {
+document.addEventListener("DOMContentLoaded", ()=> {
+    loadTask();
+})
+
+nextButton.addEventListener("click", ()=> {
+    currentPage++;
+    loadTask();
+})
+prevButton.addEventListener("click", ()=> {
+    currentPage--;
+    loadTask();
+})
+
+radioAll.addEventListener("change", ()=> {
+    finished= undefined;
+    currentPage= 1;
+    loadTask();
+})
+radioCompleted.addEventListener("change", ()=> {
+    finished= true;
+    currentPage= 1;
+    loadTask();
+})
+radioInprogress.addEventListener("change", ()=> {
+    finished= false;
+    currentPage= 1;
+    loadTask();
+})
+
+
+async function loadTask() {
+    prevButton.classList.remove("disabled")
+    nextButton.classList.remove("disabled")
     try {
-        const response= await axios.get("/tasks");
+        const response= await axios.get(
+            `/tasks?page=${currentPage}&limit=${limit}&finished=${finished}`
+        );
         
         const data= response.data;
         if(data.success) {
             if(data.body.length) {
                 list.classList.remove("d-none");
+                messageNoTask.classList.add("d-none")
                 let str= "";
                 for(let task of data.body) {
                     str+= `
@@ -110,6 +159,23 @@ document.addEventListener("DOMContentLoaded", async()=> {
                 list.innerHTML= str
             }else {
                 messageNoTask.classList.remove("d-none")
+                list.classList.add("d-none")
+                list.innerHTML= ''
+            }
+
+            totalTasks= data.totalTasks;
+            if(totalTasks > limit) {
+                pagination.classList.remove("d-none")
+                totalPages= Math.ceil( totalTasks / limit);                              
+                if(currentPage=== 1) {
+                    prevButton.classList.add("disabled")
+                }else if(currentPage=== totalPages) {
+                    nextButton.classList.add("disabled")
+                }
+                pageLabel.innerHTML= `Page ${ currentPage } of ${ totalPages }`
+            }else {
+                pagination.classList.add("d-none")
+                totalPages= 1;
             }
         }else {
             alert(data.message)
@@ -117,7 +183,9 @@ document.addEventListener("DOMContentLoaded", async()=> {
     } catch (err) {
         alert.apply(err.response.data.message)
     }
-})
+}
+
+
 
 submit.addEventListener("click", addTask);
 input.addEventListener("keydown", (event)=> {
@@ -137,30 +205,14 @@ async function addTask() {
     try {
         const { data }= await axios.post('/tasks', {title, completed});
         if(data.success) {
-            messageNoTask.classList.add("d-none");
-            list.classList.remove("d-none")
-            const newItem= `
-                <li class="list-group-item d-flex justify-content-between align-items-center" data-id=${data.body.id}>
-                    <span class="title"> 
-                        ${ title }
-                    </span>
-                    <div class="action-buttons">
-                        <span class="badge status badge-pill ${ completed ? 'bg-primary' : 'bg-secondary' }">
-                            ${ completed ? 'Compeleted' : 'Inprogress' }
-                        </span>
-                        <span class="badge badge-pill toggle-btn">
-                            Toggle
-                        </span>
-                        <span class="badge badge-pill edit-btn">
-                            Edit
-                        </span>
-                        <span class="badge badge-pill delete-btn">
-                            Delete
-                        </span>
-                    </div>
-                </li>
-            `;
-            list.innerHTML += newItem;
+            if(totalTasks == 0) {
+                currentPage= 1;
+            }else if(totalTasks % limit) {
+                currentPage= totalPages
+            }else {
+                currentPage= totalPages+1
+            }
+            loadTask();
             input.value= "";
        }else {
         alert(data.message)

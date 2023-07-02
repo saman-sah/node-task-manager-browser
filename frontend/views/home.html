@@ -28,8 +28,37 @@
           <!-- End form add task -->
 
           <!-- List of tasks -->
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="radio-all" value="option1" checked>
+            <label class="form-check-label" for="exampleRadios1">
+              All Task
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="radio-completed" value="option2">
+            <label class="form-check-label" for="exampleRadios2">
+              Completed
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="radio-inprogress" value="option2">
+            <label class="form-check-label" for="exampleRadios2">
+              Inprogress
+            </label>
+          </div>
           <ul class="list-group d-none"> 
           </ul>
+          <nav >
+            <ul id="pagination" class="pagination d-none">
+              <li class="page-item ">
+                <a id="prev-btn" class="page-link" href="#">Previous</a>
+              </li>
+              <li class="page-item"><a id="page-label" class="page-link" href="#">1</a></li>
+              <li class="page-item">
+                <a id="next-btn" class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
           <h2 class="text-center d-none no-task">There is no task</h2>
           <!-- End list of tasks -->
         </div>
